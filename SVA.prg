@@ -1,11 +1,6 @@
 #/ Controller version = 4.00
 #/ Date = 5/28/2026 10:31 AM
 #/ User remarks = 
-#0
-!PNAME=
-!PDESC=
-OccurAlarm(AlarmCode_StateMachineNotRun,Alarm_High) 
-STOP
 #1
 !PNAME=
 !PDESC=
