@@ -1,5 +1,5 @@
 #/ Controller version = 4.00
-#/ Date = 6/18/2026 2:58 PM
+#/ Date = 6/23/2026 4:17 PM
 #/ User remarks = 
 #1
 !PNAME=
@@ -323,10 +323,10 @@ INT CC=0
 
 PA_HomeVel(TT_Y0)=20;PA_HomeMode(TT_Y0)=2;PA_HomeOffset(TT_Y0)=-296.05724;PA_HomeCurrentLimit(TT_Y0)=80;         PA_LimitP(TT_Y0)=1;PA_LimitN(TT_Y0)=-531
 PA_HomeVel(BT_Y0)=20;PA_HomeMode(BT_Y0)=2;PA_HomeOffset(BT_Y0)=236.41;PA_HomeCurrentLimit(BT_Y0)=50;            PA_LimitP(BT_Y0)=531;PA_LimitN(BT_Y0)=-1
-PA_HomeVel(OL_X)=1;PA_HomeMode(OL_X)=18;PA_HomeOffset(OL_X)=-46.17895;PA_HomeCurrentLimit(OL_X)=50;                PA_LimitP(OL_X)=-80;PA_LimitN(OL_X)=-150
+PA_HomeVel(OL_X)=1;PA_HomeMode(OL_X)=18;PA_HomeOffset(OL_X)=-3.17895;PA_HomeCurrentLimit(OL_X)=50;                PA_LimitP(OL_X)=-80;PA_LimitN(OL_X)=-150
 PA_HomeVel(OL_Y)=1;PA_HomeMode(OL_Y)=18;PA_HomeOffset(OL_Y)=-25.66455;PA_HomeCurrentLimit(OL_Y)=50;               PA_LimitP(OL_Y)=20;PA_LimitN(OL_Y)=-20
 PA_HomeVel(OL_Z)=1;PA_HomeMode(OL_Z)=17;PA_HomeOffset(OL_Z)=6.9329;PA_HomeCurrentLimit(OL_Z)=50;                 PA_LimitP(OL_Z)=6.2;PA_LimitN(OL_Z)=-1
-PA_HomeVel(OR_X)=1;PA_HomeMode(OR_X)=17;PA_HomeOffset(OR_X)=48.0294;PA_HomeCurrentLimit(OR_X)=70;		         PA_LimitP(OR_X)=150;PA_LimitN(OR_X)=80
+PA_HomeVel(OR_X)=1;PA_HomeMode(OR_X)=17;PA_HomeOffset(OR_X)=5.0294;PA_HomeCurrentLimit(OR_X)=70;		         PA_LimitP(OR_X)=150;PA_LimitN(OR_X)=80
 PA_HomeVel(OR_Y)=1;PA_HomeMode(OR_Y)=18;PA_HomeOffset(OR_Y)=-24.782025;PA_HomeCurrentLimit(OR_Y)=90;		         PA_LimitP(OR_Y)=20;PA_LimitN(OR_Y)=-20
 PA_HomeVel(OR_Z)=1;PA_HomeMode(OR_Z)=17;PA_HomeOffset(OR_Z)=7.7927;PA_HomeCurrentLimit(OR_Z)=50;		         PA_LimitP(OR_Z)=6.2;PA_LimitN(OR_Z)=-1
 PA_HomeVel(TWLP)=1;PA_HomeMode(TWLP)=18;PA_HomeOffset(TWLP)=0;PA_HomeCurrentLimit(TWLP)=50;				         PA_LimitP(TWLP)=0.1;PA_LimitN(TWLP)=-26
@@ -3324,35 +3324,44 @@ REAL OutOffTime(32)
 REAL OutOffAlarmTime=10000
 REAL Inpos(32)
 REAL PEpos(32)
+REAL AxisFpos(32)
 WHILE 1
 
-IF AP_ACSStatus<>-1
+IF AP_ACSStatus <>- 1
 
-Inpos(InposAxis)=20*TARGRAD(InposAxis)
-PEpos(InposAxis)=ABS(TPOS(InposAxis)-FPOS(InposAxis))
+	Inpos(InposAxis) = 20 * TARGRAD(InposAxis)
+	PEpos(InposAxis) = ABS(TPOS(InposAxis) - FPOS(InposAxis))
 
-IF PE(InposAxis)<Inpos(InposAxis)&TARGRAD(InposAxis)<PEpos(InposAxis) 
+	IF PE(InposAxis) < Inpos(InposAxis)
+		IF TARGRAD(InposAxis) < PEpos(InposAxis)
 
-IF AST(InposAxis).#MOVE&MST(InposAxis).#ENABLED
+			IF AST(InposAxis).#MOVE& MST(InposAxis).#ENABLED
 
-IF OutOffTime(InposAxis)=0
+				IF OutOffTime(InposAxis) = 0
 
-OutOffTime(InposAxis)=TIME
-END
-IF TIME-OutOffTime(InposAxis) > OutOffAlarmTime
-OccurAlarm(551+InposAxis,Alarm_Tips)
-END
+					OutOffTime(InposAxis) = TIME
+					AxisFpos(InposAxis)=FPOS(InposAxis)
+				END
+				IF TIME- OutOffTime(InposAxis) > OutOffAlarmTime&ABS(AxisFpos(InposAxis)-FPOS(InposAxis))<Inpos(InposAxis)
+					OccurAlarm(551 + InposAxis, Alarm_Tips)
+				END
 
 
 
-END
-ELSE OutOffTime(InposAxis)=0
-END
-InposAxis++
-IF InposAxis>23
+			END
+			ELSE		
+		OutOffTime(InposAxis) = 0
+		END
+	
+	ELSE		
+		OutOffTime(InposAxis) = 0
+	END
 
-InposAxis=0
-END
+	InposAxis++ 
+	IF InposAxis > 23
+
+		InposAxis = 0
+	END
 
 END
 
@@ -4503,7 +4512,7 @@ TILL MFLAGS(OL_X).#HOME=1
 ptp/ev OL_X,PA_HomeOffset(OL_X),1
 TILL MST(OL_X).#INPOS
 WAIT 1000
-SET FPOS(OL_X)=-128.5
+SET FPOS(OL_X)=-85
 FDEF(OL_X).#RL=1
 FDEF(OL_X).#LL=1
 !FDEF(OL_X).#SRL=1
@@ -4726,7 +4735,7 @@ TILL MFLAGS(OR_X).#HOME=1
 ptp/ev OR_X,PA_HomeOffset(OR_X),1
 TILL MST(OR_X).#INPOS
 WAIT 1000
-SET FPOS(OR_X)=128.5
+SET FPOS(OR_X)=85
 !FDEF(OR_X).#SRL=1
 !FDEF(OR_X).#SLL=1
 SLLIMIT(OR_X)=PA_LimitN(OR_X)
