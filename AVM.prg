@@ -1,5 +1,5 @@
 #/ Controller version = 3.14.01
-#/ Date = 5/14/2026 2:27 PM
+#/ Date = 6/23/2026 3:12 PM
 #/ User remarks = 
 #0
 !PNAME=
@@ -19,6 +19,7 @@ WAIT 5000
 PA_ComSupMotionType=AxisHome
 !28s   9:43
 
+
 STOP
 #1
 !PNAME=
@@ -26,8 +27,9 @@ STOP
 
 WAIT 5000
 AUTOEXEC:
-
+IF ^PST(7).#RUN
 START 7,InitACS
+END
 !------- Assignment Variable Parameters -----------------------------------------------
 INT MotionStart(INT MontionType);
 INT CheckPara(INT MotionType);
@@ -52,6 +54,7 @@ IF PA_ComSupMotionType=AxisHome			!103
 		 
 	    START 3,Axis_Home
 		PA_AllHomedFlag=0
+		Initializing=1
      END
 	 ELSEIF PA_ComSupMotionType=PCOccurAlarm          !105
 	 OccurAlarm(AlarmCode_ForcedAlarm,Alarm_High)
@@ -356,7 +359,7 @@ VOID CheckHomeTimeOut()
 					LimitTime = PA_AxiHomeTimeOut(HomeAxis(i))
 				END
 			jj=TIME- HomeStartTime(HomeAxis(i))
-			DISP jj,i
+!			DISP jj,i
 			IF TIME- HomeStartTime(HomeAxis(i)) > LimitTime
 			
 			
@@ -370,7 +373,7 @@ VOID CheckHomeTimeOut()
 	ELSE		
 !		FDEF(HomeAxis(i)).#SRL= 1
 !		FDEF(HomeAxis(i)).#SLL= 1
-		HomeAxis(i) =- 1
+!		HomeAxis(i) =- 1
 	END
 	END
 	i++
@@ -495,7 +498,9 @@ INT axis
 TILL MST(axis).#INPOS 
 
 END
-TILL MST(0).#INPOS&MST(1).#INPOS&MST(2).#INPOS&MST(3).#INPOS
+TILL MST(0).#INPOS&MST(1).#INPOS&MST(2).#INPOS&MST(4).#INPOS
+TARGRAD(2)=0.005
+TARGRAD(4)=0.005
 HomeTimeFlga =1
 MotionEnd(MotionSuccess)
 STOP
@@ -508,20 +513,23 @@ VOID ALLAxis_Home()
 	INT k = 0
 	INT l = 0
 !	FILL(- 1, HomeAxis)
-	LOOP  AxisCount
+	LOOP AxisCount
 		IF PA_HomeAxis(i) = 1
 			k = k + 1
 			IF PA_HomeOrder(i) = IntMin
-				HomeStartTime(i) = TIME
-				HomeAxis(j) = i
-				OffsetAxis = j
-				SingleAxisHome(HomeAxis(j), PA_HomeMode(i), PA_HomeVel(i), PA_HomeOffset(i), PA_HomeCurrentLimit(i)) !hui yuan cehng xu
-			DISP "111",HomeAxis(j)
-				l = 1
-				j = j + 1
+				BLOCK					
+					HomeStartTime(i) = TIME
+					HomeAxis(i) = i
+!					OffsetAxis = j
+					DISP "HOME START", HomeAxis(i)
+					SingleAxisHome(HomeAxis(i), PA_HomeMode(i), PA_HomeVel(i), PA_HomeOffset(i), PA_HomeCurrentLimit(i)) !hui yuan cehng xu
+					DISP "HOMEING", HomeAxis(i)
+				END
+!				l = 1
+!				j = j + 1
 			END
-	END
-	i = i + 1
+		END
+		i = i + 1
 	END
 
 	IF 1 !k>1
@@ -530,47 +538,41 @@ VOID ALLAxis_Home()
 		LOOP SIZEOF(PA_HomeAxis)
 			IF PA_HomeOrder(i) = IntMin & PA_HomeAxis(i) = 1
 				startTime = TIME
-				WHILE ^MFLAGS(i).#HOME !Pan Duan Hui Ling Wan Cheng
-!					IF TIME- startTime > PA_AxiHomeTimeOut(i) & PA_AxiHomeTimeOut(i) > 0
-!!						OccurAlarm(AlarmCode_HomeTimeOut, Alarm_Normal, 3)
-!                        OccurAlarm(163 + HomeAxis(i), Alarm_Normal,3)
-!						DISP "AlarmCode_HomeTimeOut",i
-!					END
+				WHILE ^MFLAGS(i).#HOME!Pan Duan Hui Ling Wan Cheng
+				END
+				IF PA_HomeOffset(i) <> 0
+					PTP/V i, 0, PA_HomeVel(i)
+					DISP "MOVE ZERO", i
+				END
+
+
+				FDEF(i).#RL= 1
+				FDEF(i).#LL= 1
+				FDEF(i).#SRL= 1
+				FDEF(i).#SLL= 1
+
+				PA_HomeAxis(i) = 0
+				HomeAxis(i) =- 1
+!				j = j + 1
 			END
-		IF 1
-			PTP/V i, 0,20
-			DISP "MOVE ZERO",i
+			i = i + 1
 		END
+!	ELSEIF l = 1
+!	FILL(-1, HomeAxis)
+!	FILL(0, PA_HomeAxis)
 
-!	FDEF(i).#SRL = 1
-!	FDEF(i).#SLL = 1
-	FDEF(i).#RL=1
-	FDEF(i).#LL=1
-!	FMASK(i).#SRL=1
-!	FMASK(i).#SlL=1
-!   SRLIMIT(i)=PA_LimitP(i)
-!	SLLIMIT(i)=PA_LimitN(i)
-	PA_HomeAxis(i) = 0
-	HomeAxis(i) =- 1
-	j = j + 1
-	END
-	i = i + 1
-	END
-	ELSEIF l = 1
-		FILL(0, PA_HomeAxis)
-	FDEF(i).#SRL = 1
-	FDEF(i).#SLL = 1
 
 	END
-	RET
+	RET 
 }
 
 VOID SingleAxisHome(INT Axis, INT HomeMode, REAL HomeVel, REAL HomeOffset, REAL HomeCurrentLimit)
 {	
 	FCLEAR ALL
 	INT Axis_S 
-	ENABLE Axis
 	DISP "ENABLE ", Axis
+	ENABLE Axis
+	
 	IF HomeMode = 18 & FAULT(Axis).#RL
 		JOG/V Axis,- 1
 		TILL ^FAULT(Axis).#RL
@@ -713,7 +715,7 @@ END
 TILL ^MST(TIR_Y0).#MOVE|-0.01<FPOS(TIR_Y0)<0.01
 IntervenePositoinMotion=1
 AP_AlarmCode(173)=0
-
+Initializing=0
 MotionEnd(MotionSuccess)
 DISP "TIR_Y_IntervenePositoinMotion OK"
 STOP
@@ -784,7 +786,7 @@ FDEF(Axis_S).#SRL= 0
 FDEF(Axis_S).#SLL= 0
 FDEF(Axis_S).#RL= 0
 FDEF(Axis_S).#LL= 0
-
+TARGRAD(Axis)=0.01
 ENABLE Axis
 IF FAULT(Axis).#RL| FAULT(Axis_S).#RL
 	JOG/V(Axis),- HOMEVELL(Axis)
@@ -841,6 +843,7 @@ FDEF(Axis_S).#SRL= 0
 FDEF(Axis_S).#SLL= 0
 FDEF(Axis_S).#RL= 0
 FDEF(Axis_S).#LL= 0
+TARGRAD(Axis)=0.01
 ENABLE Axis
 
 
@@ -936,7 +939,7 @@ STOP
 
 SLVKP(Optic_Y0)=100
 SLVKI(Optic_Y0)=100
-SLPKP(Optic_Y0)=300
+SLPKP(Optic_Y0)=200
 SLAFF(Optic_Y0)=80
 SLFRC(Optic_Y0)=30
 SLFRCN(Optic_Y0)=30	
@@ -997,7 +1000,7 @@ SLFRC(TIR_Y0)=10
 SLFRCN(TIR_Y0)=20	
 MFLAGS(TIR_Y0).#NOFILT=0
 MFLAGS(TIR_Y0).#NANO=1
-TARGRAD(TIR_Y0)=0.002
+TARGRAD(TIR_Y0)=0.005
 SETTLE(TIR_Y0)=1
 SLZFF(TIR_Y0)=0.005
 SLDZMAX(TIR_Y0)=0.001 
@@ -1083,8 +1086,8 @@ XCURV(Optic_Y1)=20
 
 XCURI(TIR_Y0)=30
 XCURV(TIR_Y0)=90
-XCURI(TIR_Y1)=25
-XCURV(TIR_Y1)=40
+XCURI(TIR_Y1)=15
+XCURV(TIR_Y1)=20
 
 
 MFLAGS(Optic_Y0).25=1
@@ -1356,7 +1359,7 @@ RET
 !!
 !!RET
 
-ON (MST(Optic_X).#MOVE|MST(TIR_X).#MOVE|MST(Optic_Y0).#MOVE|MST(TIR_Y0).#MOVE)&PA_EC_DI(0).1 = 1&AP_ACS_TsetMode_Flag<>1
+ON (MST(Optic_X).#MOVE|MST(TIR_X).#MOVE|MST(Optic_Y0).#MOVE|MST(TIR_Y0).#MOVE)&PA_EC_DI(0).1 = 1&AP_ACS_TsetMode_Flag<>1&Initializing=0
 HALT Optic_X
 HALT TIR_X
 HALT TIR_Y0
@@ -1366,7 +1369,7 @@ OccurAlarm(AlarmCode_Loading_Cannot,Alarm_High)
 
 
 RET
-ON (FPOS(LDP_Z)>2|^MFLAGS(LDP_Z).#HOME)&((FVEL(Optic_Y0)<-0.1&FPOS(Optic_Y0)<-1)|(FVEL(TIR_Y0)<-0.1&FPOS(TIR_Y0)<-1))&AP_ACS_TsetMode_Flag<>1
+ON (FPOS(LDP_Z)>2|^MFLAGS(LDP_Z).#HOME)&((FVEL(Optic_Y0)<-0.1&FPOS(Optic_Y0)<-1)|(FVEL(TIR_Y0)<-0.1&FPOS(TIR_Y0)<-1))&AP_ACS_TsetMode_Flag<>1&Initializing=0
 !WAIT 10
 KILL Optic_X
 KILL TIR_X
@@ -1390,7 +1393,7 @@ RET
 !
 !RET
 
-ON (FPOS(LDP_Z)>5&FVEL(LDP_Z)>0.1|^MFLAGS(LDP_Z).#HOME)&(FPOS(Optic_Y0)<Loading_Pin_PLMIT|FPOS(Optic_X)<Loading_Pin_PLMIT|FPOS(TIR_X)<Loading_Pin_PLMIT|FPOS(TIR_Y0)<Loading_Pin_PLMIT)&AP_ACS_TsetMode_Flag<>1
+ON (FPOS(LDP_Z)>5&FVEL(LDP_Z)>0.2|^MFLAGS(LDP_Z).#HOME)&(FPOS(Optic_Y0)<Loading_Pin_PLMIT|FPOS(Optic_X)<Loading_Pin_PLMIT|FPOS(TIR_X)<Loading_Pin_PLMIT|FPOS(TIR_Y0)<Loading_Pin_PLMIT)&AP_ACS_TsetMode_Flag<>1&Initializing=0
 !WAIT 10
 !HALT 0
 !HALT 1
@@ -1450,6 +1453,7 @@ AxisNums(0)=0;AxisNums(1)=1;AxisNums(2)=2;AxisNums(3)=3;AxisNums(4)=4;AxisNums(5
 GLOBAL T(10)
 GLOBAL INT HomeTimeFlga
 GLOBAL INT HomeFlag
+GLOBAL INT Initializing
 GLOBAL REAL HomeCurrentPos(32)
 GLOBAL REAL HomeLimtiPos(32)
 
