@@ -1,5 +1,5 @@
 #/ Controller version = 4.00
-#/ Date = 6/23/2026 4:17 PM
+#/ Date = 7/7/2026 3:34 PM
 #/ User remarks = 
 #1
 !PNAME=
@@ -333,10 +333,10 @@ PA_HomeVel(TWLP)=1;PA_HomeMode(TWLP)=18;PA_HomeOffset(TWLP)=0;PA_HomeCurrentLimi
 PA_HomeVel(BWLP)=1;PA_HomeMode(BWLP)=17;PA_HomeOffset(BWLP)=0;PA_HomeCurrentLimit(BWLP)=50;				         PA_LimitP(BWLP)=50;PA_LimitN(BWLP)=-0.2
 PA_HomeVel(TT_X0)=0.2;PA_HomeMode(TT_X0)=17;PA_HomeOffset(TT_X0)=-1.44235;PA_HomeCurrentLimit(TT_X0)=50;        PA_LimitP(TT_X0)=1;PA_LimitN(TT_X0)=-1
 PA_HomeVel(TT_X1)=0.2;PA_HomeMode(TT_X1)=17;PA_HomeOffset(TT_X1)=-1.307467;PA_HomeCurrentLimit(TT_X1)=50;        PA_LimitP(TT_X1)=1;PA_LimitN(TT_X1)=-1
-PA_HomeVel(BT_X0)=0.2;PA_HomeMode(BT_X0)=18;PA_HomeOffset(BT_X0)=1.387542;PA_HomeCurrentLimit(BT_X0)=50;	         PA_LimitP(BT_X0)=1;PA_LimitN(BT_X0)=-1
-PA_HomeVel(BT_X1)=0.2;PA_HomeMode(BT_X1)=18;PA_HomeOffset(BT_X1)=1.24029;PA_HomeCurrentLimit(BT_X1)=50;         PA_LimitP(BT_X1)=1;PA_LimitN(BT_X1)=-1
-PA_HomeVel(SLA_Y0)=1;PA_HomeMode(SLA_Y0)=17;PA_HomeOffset(SLA_Y0)=4.5219;PA_HomeCurrentLimit(SLA_Y0)=50;         PA_LimitP(SLA_Y0)=8;PA_LimitN(SLA_Y0)=-3
-PA_HomeVel(SLA_Y1)=1;PA_HomeMode(SLA_Y1)=17;PA_HomeOffset(SLA_Y1)=2.7703;PA_HomeCurrentLimit(SLA_Y1)=50;         PA_LimitP(SLA_Y1)=8;PA_LimitN(SLA_Y1)=-3 
+PA_HomeVel(BT_X0)=0.2;PA_HomeMode(BT_X0)=18;PA_HomeOffset(BT_X0)=1.197542;PA_HomeCurrentLimit(BT_X0)=50;	         PA_LimitP(BT_X0)=1;PA_LimitN(BT_X0)=-1
+PA_HomeVel(BT_X1)=0.2;PA_HomeMode(BT_X1)=18;PA_HomeOffset(BT_X1)=1.15029;PA_HomeCurrentLimit(BT_X1)=50;         PA_LimitP(BT_X1)=1;PA_LimitN(BT_X1)=-1
+PA_HomeVel(SLA_Y0)=1;PA_HomeMode(SLA_Y0)=17;PA_HomeOffset(SLA_Y0)=4.5219;PA_HomeCurrentLimit(SLA_Y0)=50;         PA_LimitP(SLA_Y0)=8;PA_LimitN(SLA_Y0)=-4
+PA_HomeVel(SLA_Y1)=1;PA_HomeMode(SLA_Y1)=17;PA_HomeOffset(SLA_Y1)=2.7703;PA_HomeCurrentLimit(SLA_Y1)=50;         PA_LimitP(SLA_Y1)=8;PA_LimitN(SLA_Y1)=-4 
 PA_HomeVel(BC_Z0)=1;PA_HomeMode(BC_Z0)=17;PA_HomeOffset(BC_Z0)=-1.122;PA_HomeCurrentLimit(BC_Z0)=50;	         PA_LimitP(BC_Z0)=3.5;PA_LimitN(BC_Z0)=-0.01
 PA_HomeVel(BC_Z1)=1;PA_HomeMode(BC_Z1)=17;PA_HomeOffset(BC_Z1)=-0.897;PA_HomeCurrentLimit(BC_Z1)=50;	         PA_LimitP(BC_Z1)=3.5;PA_LimitN(BC_Z1)=-0.01
 PA_HomeVel(BC_Z2)=1;PA_HomeMode(BC_Z2)=17;PA_HomeOffset(BC_Z2)=-0.920;PA_HomeCurrentLimit(BC_Z2)=50;	         PA_LimitP(BC_Z2)=3.5;PA_LimitN(BC_Z2)=-0.01
@@ -3343,7 +3343,7 @@ IF AP_ACSStatus <>- 1
 					AxisFpos(InposAxis)=FPOS(InposAxis)
 				END
 				IF TIME- OutOffTime(InposAxis) > OutOffAlarmTime&ABS(AxisFpos(InposAxis)-FPOS(InposAxis))<Inpos(InposAxis)
-					OccurAlarm(551 + InposAxis, Alarm_Tips)
+!					OccurAlarm(551 + InposAxis, Alarm_Tips)
 				END
 
 
@@ -3669,12 +3669,12 @@ TARGRAD(9)=0.001
 SLVKP(BT_Y0)=828.774 
 SLVKI(BT_Y0)=154.416
 SLPKP(BT_Y0)=200
-SLAFF(BT_Y0)=842.321 
+SLAFF(BT_Y0)=500 
 
 SLVKP(BT_Y1)=300
 SLVKI(BT_Y1)=200
 SLPKP(BT_Y1)=200
-SLAFF(BT_Y1)=200
+SLAFF(BT_Y1)=1
 
 
 
@@ -3684,18 +3684,18 @@ SLVNFRQ(BT_Y0)= 283.113
 SLVNWID (BT_Y0)=78.4795 
 SLVNATT (BT_Y0)=5.54269
 
-SLVKP(TT_Y0)=234
-SLVKI(TT_Y0)=200
-SLPKP(TT_Y0)=150
-SLAFF(TT_Y0)=100
+SLVKP(TT_Y0)=600
+SLVKI(TT_Y0)=300
+SLPKP(TT_Y0)=200
+SLAFF(TT_Y0)=50
 !
 
 
 
-SLVKP(TT_Y1)=150
+SLVKP(TT_Y1)=200
 SLVKI(TT_Y1)=200
-SLPKP(TT_Y1)=20
-SLAFF(TT_Y1)=100
+SLPKP(TT_Y1)=200
+SLAFF(TT_Y1)=50
 
 
 
