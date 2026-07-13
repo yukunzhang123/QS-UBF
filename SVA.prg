@@ -1,5 +1,5 @@
 #/ Controller version = 4.00
-#/ Date = 7/7/2026 3:34 PM
+#/ Date = 7/13/2026 4:39 PM
 #/ User remarks = 
 #1
 !PNAME=
@@ -326,8 +326,8 @@ PA_HomeVel(BT_Y0)=20;PA_HomeMode(BT_Y0)=2;PA_HomeOffset(BT_Y0)=236.41;PA_HomeCur
 PA_HomeVel(OL_X)=1;PA_HomeMode(OL_X)=18;PA_HomeOffset(OL_X)=-3.17895;PA_HomeCurrentLimit(OL_X)=50;                PA_LimitP(OL_X)=-80;PA_LimitN(OL_X)=-150
 PA_HomeVel(OL_Y)=1;PA_HomeMode(OL_Y)=18;PA_HomeOffset(OL_Y)=-25.66455;PA_HomeCurrentLimit(OL_Y)=50;               PA_LimitP(OL_Y)=20;PA_LimitN(OL_Y)=-20
 PA_HomeVel(OL_Z)=1;PA_HomeMode(OL_Z)=17;PA_HomeOffset(OL_Z)=6.9329;PA_HomeCurrentLimit(OL_Z)=50;                 PA_LimitP(OL_Z)=6.2;PA_LimitN(OL_Z)=-1
-PA_HomeVel(OR_X)=1;PA_HomeMode(OR_X)=17;PA_HomeOffset(OR_X)=5.0294;PA_HomeCurrentLimit(OR_X)=70;		         PA_LimitP(OR_X)=150;PA_LimitN(OR_X)=80
-PA_HomeVel(OR_Y)=1;PA_HomeMode(OR_Y)=18;PA_HomeOffset(OR_Y)=-24.782025;PA_HomeCurrentLimit(OR_Y)=90;		         PA_LimitP(OR_Y)=20;PA_LimitN(OR_Y)=-20
+PA_HomeVel(OR_X)=1;PA_HomeMode(OR_X)=17;PA_HomeOffset(OR_X)=4.3294;PA_HomeCurrentLimit(OR_X)=70;		         PA_LimitP(OR_X)=150;PA_LimitN(OR_X)=80
+PA_HomeVel(OR_Y)=1;PA_HomeMode(OR_Y)=18;PA_HomeOffset(OR_Y)=-25.632025;PA_HomeCurrentLimit(OR_Y)=90;		         PA_LimitP(OR_Y)=20;PA_LimitN(OR_Y)=-20
 PA_HomeVel(OR_Z)=1;PA_HomeMode(OR_Z)=17;PA_HomeOffset(OR_Z)=7.7927;PA_HomeCurrentLimit(OR_Z)=50;		         PA_LimitP(OR_Z)=6.2;PA_LimitN(OR_Z)=-1
 PA_HomeVel(TWLP)=1;PA_HomeMode(TWLP)=18;PA_HomeOffset(TWLP)=0;PA_HomeCurrentLimit(TWLP)=50;				         PA_LimitP(TWLP)=0.1;PA_LimitN(TWLP)=-26
 PA_HomeVel(BWLP)=1;PA_HomeMode(BWLP)=17;PA_HomeOffset(BWLP)=0;PA_HomeCurrentLimit(BWLP)=50;				         PA_LimitP(BWLP)=50;PA_LimitN(BWLP)=-0.2
