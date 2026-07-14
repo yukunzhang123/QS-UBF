@@ -1,24 +1,25 @@
 #/ Controller version = 3.14.01
-#/ Date = 6/23/2026 3:12 PM
+#/ Date = 7/14/2026 11:09 AM
 #/ User remarks = 
 #0
 !PNAME=
 !PDESC=
-PA_ComSupMotionType=PCClearAlarm
-FILL (0,PA_HomeOrder)
-FILL (1,PA_HomeOrder,6,7)
-FILL (2,PA_HomeOrder,0,1)
-FILL (3,PA_HomeOrder,2,2)
-FILL (4,PA_HomeOrder,4,4)
-FILL (0,PA_HomeAxis)
-FILL (1,PA_HomeAxis,0,7)
-PA_HomeAxis(3)=0
-PA_HomeAxis(5)=0
-!PA_HomeAxis(4)=0
-WAIT 5000
-PA_ComSupMotionType=AxisHome
+!PA_ComSupMotionType=PCClearAlarm
+!FILL (0,PA_HomeOrder)
+!FILL (1,PA_HomeOrder,6,7)
+!FILL (2,PA_HomeOrder,0,1)
+!FILL (3,PA_HomeOrder,2,2)
+!FILL (4,PA_HomeOrder,4,4)
+!FILL (0,PA_HomeAxis)
+!FILL (1,PA_HomeAxis,0,7)
+!PA_HomeAxis(3)=0
+!PA_HomeAxis(5)=0
+!!PA_HomeAxis(4)=0
+!WAIT 5000
+!PA_ComSupMotionType=AxisHome
 !28s   9:43
-
+TARGRAD(4)=0.01
+SETTLE(4)=0
 
 STOP
 #1
@@ -363,8 +364,8 @@ VOID CheckHomeTimeOut()
 			IF TIME- HomeStartTime(HomeAxis(i)) > LimitTime
 			
 			
-				OccurAlarm(163 + HomeAxis(i), Alarm_Normal,3)
-!                OccurAlarm(AlarmCode_HomeTimeOut, Alarm_Normal, 3)
+!				OccurAlarm(163 + HomeAxis(i), Alarm_Normal,3)
+                OccurAlarm(AlarmCode_HomeTimeOut, Alarm_Normal, 3)
 				DISP "HOMETIME OUT",HomeAxis(i)
 				HomeAxis(i) =- 1
 				KILL i
@@ -1058,7 +1059,7 @@ END
 IF PST(5).#RUN<>1
 START 5,1
 END
-HertTime=60000
+HertTime=3000
 
 !-------------------------------------3.Variable Init --------------------
 !Loading_Pin_PLMIT=-(PA_HomeOffset(TIR_Y)-160.305)
